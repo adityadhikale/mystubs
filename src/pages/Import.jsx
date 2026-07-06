@@ -136,7 +136,7 @@ export default function Import() {
     );
   };
 
-  const handleToggleManualForm = (id) => {
+  const handleToggleManualForm = (id, forceUseOriginalText = false) => {
     setParsedLines((prev) =>
       prev.map((r) => {
         if (r.id !== id) return r;
@@ -146,14 +146,14 @@ export default function Import() {
           showManualForm: show,
           showSwapPicker: false,
           manualFormState: show
-            ? r.manualFormState || {
-              title: r.result ? r.result.Title : r.text,
-              year: r.result ? r.result.Year : '',
-              type: r.result ? r.result.Type : 'movie',
+            ? (forceUseOriginalText ? null : r.manualFormState) || {
+              title: forceUseOriginalText ? r.text : (r.result ? r.result.Title : r.text),
+              year: forceUseOriginalText ? '' : (r.result ? r.result.Year : ''),
+              type: forceUseOriginalText ? 'movie' : (r.result ? r.result.Type : 'movie'),
               poster:
-                r.result && r.result.Poster !== 'N/A' ? r.result.Poster : '',
-              genre: r.result ? r.result.Genre : '',
-              status: r.result ? r.result.status : 'Watchlist',
+                !forceUseOriginalText && r.result && r.result.Poster !== 'N/A' ? r.result.Poster : '',
+              genre: forceUseOriginalText ? '' : (r.result ? r.result.Genre : ''),
+              status: forceUseOriginalText ? 'Watchlist' : (r.result ? r.result.status : 'Watchlist'),
             }
             : r.manualFormState,
         };
@@ -1255,17 +1255,19 @@ export default function Import() {
                               ).length > 0 && (
                                 <button
                                   type="button"
-                                  onClick={() => handleToggleSwapPicker(item.id)}
+                                  disabled={isImporting}
+                                  onClick={() => !isImporting && handleToggleSwapPicker(item.id)}
                                   style={{
                                     background: 'transparent',
                                     border: 'none',
                                     padding: 0,
                                     color: 'var(--primary)',
                                     textDecoration: 'underline',
-                                    cursor: 'pointer',
+                                    cursor: isImporting ? 'not-allowed' : 'pointer',
                                     fontSize: '15px',
                                     fontFamily: "'Hanken Grotesk', sans-serif",
                                     fontWeight: '500',
+                                    opacity: isImporting ? 0.45 : 1,
                                   }}
                                 >
                                   {item.showSwapPicker ? 'Close' : 'Not this one?'}
@@ -1280,17 +1282,19 @@ export default function Import() {
                             {item.alternates && item.alternates.length > 0 && (
                               <button
                                 type="button"
-                                onClick={() => handleToggleSwapPicker(item.id)}
+                                disabled={isImporting}
+                                onClick={() => !isImporting && handleToggleSwapPicker(item.id)}
                                 style={{
                                   background: 'transparent',
                                   border: 'none',
                                   padding: 0,
                                   color: 'var(--primary)',
                                   textDecoration: 'underline',
-                                  cursor: 'pointer',
+                                  cursor: isImporting ? 'not-allowed' : 'pointer',
                                   fontSize: '15px',
                                   fontFamily: "'Hanken Grotesk', sans-serif",
                                   fontWeight: '500',
+                                  opacity: isImporting ? 0.45 : 1,
                                 }}
                               >
                                 {item.showSwapPicker ? 'Close' : 'Choose match'}
@@ -1298,17 +1302,19 @@ export default function Import() {
                             )}
                             <button
                               type="button"
-                              onClick={() => handleToggleManualForm(item.id)}
+                              disabled={isImporting}
+                              onClick={() => !isImporting && handleToggleManualForm(item.id)}
                               style={{
                                   background: 'transparent',
                                   border: 'none',
                                   padding: 0,
                                   color: 'var(--primary)',
                                   textDecoration: 'underline',
-                                  cursor: 'pointer',
+                                  cursor: isImporting ? 'not-allowed' : 'pointer',
                                   fontSize: '15px',
                                   fontFamily: "'Hanken Grotesk', sans-serif",
                                   fontWeight: '500',
+                                  opacity: isImporting ? 0.45 : 1,
                               }}
                             >
                               {item.showManualForm ? 'Cancel' : 'Fill manually'}
@@ -1321,20 +1327,22 @@ export default function Import() {
 
                         <button
                           type="button"
-                          onClick={() => handleDeleteRow(item.id)}
+                          disabled={isImporting}
+                          onClick={() => !isImporting && handleDeleteRow(item.id)}
                           style={{
                             background: 'transparent',
                             border: 'none',
                             color: 'var(--text-muted)',
-                            cursor: 'pointer',
+                            cursor: isImporting ? 'not-allowed' : 'pointer',
                             padding: '4px',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             flexShrink: 0,
+                            opacity: isImporting ? 0.45 : 1,
                           }}
-                          onMouseEnter={(e) => e.currentTarget.style.color = 'var(--error)'}
-                          onMouseLeave={(e) => e.currentTarget.style.color = 'var(--text-muted)'}
+                          onMouseEnter={(e) => { if (!isImporting) e.currentTarget.style.color = 'var(--error)'; }}
+                          onMouseLeave={(e) => { if (!isImporting) e.currentTarget.style.color = 'var(--text-muted)'; }}
                           aria-label="Remove title"
                         >
                           <svg
@@ -1397,7 +1405,8 @@ export default function Import() {
                                 <button
                                   key={alt.imdbID}
                                   type="button"
-                                  onClick={() => handleSelectAlternate(item.id, alt)}
+                                  disabled={isImporting}
+                                  onClick={() => !isImporting && handleSelectAlternate(item.id, alt)}
                                   style={{
                                     display: 'flex',
                                     flexDirection: 'column',
@@ -1405,12 +1414,13 @@ export default function Import() {
                                     background: 'var(--surface)',
                                     border: '1px solid var(--outline-variant)',
                                     padding: '8px',
-                                    cursor: 'pointer',
+                                    cursor: isImporting ? 'not-allowed' : 'pointer',
                                     textAlign: 'left',
                                     color: 'var(--text)',
                                     borderRadius: '0px',
                                     gap: '6px',
                                     transition: 'border-color 0.18s ease',
+                                    opacity: isImporting ? 0.45 : 1,
                                   }}
                                 >
                                   {alt.Poster && alt.Poster !== 'N/A' ? (
@@ -1514,6 +1524,27 @@ export default function Import() {
                                   </div>
                                 </button>
                               ))}
+                          </div>
+                          <div style={{ marginTop: '12px' }}>
+                            <button
+                              type="button"
+                              disabled={isImporting}
+                              onClick={() => !isImporting && handleToggleManualForm(item.id, true)}
+                              style={{
+                                background: 'transparent',
+                                border: 'none',
+                                padding: 0,
+                                color: 'var(--primary)',
+                                textDecoration: 'underline',
+                                cursor: isImporting ? 'not-allowed' : 'pointer',
+                                fontSize: '15px',
+                                fontFamily: "'Hanken Grotesk', sans-serif",
+                                fontWeight: '500',
+                                opacity: isImporting ? 0.45 : 1,
+                              }}
+                            >
+                              None of these — fill in manually
+                            </button>
                           </div>
                         </div>
                       )}
@@ -1766,24 +1797,30 @@ export default function Import() {
                           >
                             <button
                               type="button"
-                              onClick={() => handleToggleManualForm(item.id)}
+                              disabled={isImporting}
+                              onClick={() => !isImporting && handleToggleManualForm(item.id)}
                               className="detail-secondary-button"
-                              style={{ padding: '8px 16px', fontSize: '13px' }}
+                              style={{
+                                padding: '8px 16px',
+                                fontSize: '13px',
+                                opacity: isImporting ? 0.45 : 1,
+                                cursor: isImporting ? 'not-allowed' : 'pointer',
+                              }}
                             >
                               Cancel
                             </button>
                             <button
                               type="button"
-                              onClick={() => handleSaveManual(item.id)}
-                              disabled={!item.manualFormState.title.trim()}
+                              disabled={isImporting || !item.manualFormState.title.trim()}
+                              onClick={() => !isImporting && handleSaveManual(item.id)}
                               className="detail-primary-button"
                               style={{
                                 padding: '8px 16px',
                                 fontSize: '13px',
-                                opacity: item.manualFormState.title.trim() ? 1 : 0.5,
-                                cursor: item.manualFormState.title.trim()
-                                  ? 'pointer'
-                                  : 'not-allowed',
+                                opacity: (isImporting || !item.manualFormState.title.trim()) ? 0.45 : 1,
+                                cursor: (isImporting || !item.manualFormState.title.trim())
+                                  ? 'not-allowed'
+                                  : 'pointer',
                               }}
                             >
                               Save
