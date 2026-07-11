@@ -1,4 +1,27 @@
 const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
+const TOKEN_KEY = 'mystubs_token';
+
+/**
+ * Retrieve auth headers with token if present.
+ */
+function getAuthHeaders(customHeaders = {}) {
+  const headers = { ...customHeaders };
+  const token = localStorage.getItem(TOKEN_KEY);
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  return headers;
+}
+
+/**
+ * Clear token and redirect to login if 401 is received (except for login itself).
+ */
+function handleAuthResponse(path, response) {
+  if (response.status === 401 && path !== '/login') {
+    localStorage.removeItem(TOKEN_KEY);
+    window.location.href = '/login';
+  }
+}
 
 /**
  * Helper to perform HTTP GET requests to the backend API.
@@ -7,7 +30,10 @@ const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000
 async function apiGet(path) {
   const url = `${API_BASE_URL}${path}`;
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      headers: getAuthHeaders(),
+    });
+    handleAuthResponse(path, response);
     const data = await response.json();
 
     if (!response.ok) {
@@ -31,11 +57,12 @@ async function apiPost(path, body) {
   try {
     const response = await fetch(url, {
       method: 'POST',
-      headers: {
+      headers: getAuthHeaders({
         'Content-Type': 'application/json',
-      },
+      }),
       body: JSON.stringify(body),
     });
+    handleAuthResponse(path, response);
     const data = await response.json();
 
     if (!response.ok) {
@@ -59,11 +86,12 @@ async function apiPatch(path, body) {
   try {
     const response = await fetch(url, {
       method: 'PATCH',
-      headers: {
+      headers: getAuthHeaders({
         'Content-Type': 'application/json',
-      },
+      }),
       body: JSON.stringify(body),
     });
+    handleAuthResponse(path, response);
     const data = await response.json();
 
     if (!response.ok) {
@@ -87,7 +115,9 @@ async function apiDelete(path) {
   try {
     const response = await fetch(url, {
       method: 'DELETE',
+      headers: getAuthHeaders(),
     });
+    handleAuthResponse(path, response);
     const data = await response.json();
 
     if (!response.ok) {
@@ -100,6 +130,15 @@ async function apiDelete(path) {
     console.error(`API DELETE error for path ${path}:`, error.message);
     throw error;
   }
+}
+
+/**
+ * Login request to backend.
+ * @param {string} password Passcode to login
+ * @returns {Promise<Object>} Contains token
+ */
+export async function login(password) {
+  return apiPost('/login', { password });
 }
 
 /**

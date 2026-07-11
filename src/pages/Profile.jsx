@@ -1,12 +1,19 @@
 // Profile screen: displays database integration status (OMDB, TMDB, Google Sheets) and exports archive backups in CSV/JSON formats.
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { getStatus, getTitles } from '../services/api';
 import Toast from '../components/Toast';
 import { getTodayDateString, exportToCsv, exportToJson } from '../utils/exportUtils';
 
 // Main Profile page component: handles connection checks, statistics calculations, and backup exports
 export default function Profile() {
+  const navigate = useNavigate();
   const [status, setStatus] = useState(null);
+
+  const handleLogout = () => {
+    localStorage.removeItem('mystubs_token');
+    navigate('/login');
+  };
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
@@ -420,6 +427,50 @@ export default function Profile() {
                     {exportingJson ? 'Exporting...' : 'Export as JSON'}
                   </button>
                 </div>
+              </div>
+            </div>
+
+            {/* Logout Section */}
+            <div style={{ marginTop: '24px' }}>
+              <div className="detail-section-label" style={{ marginBottom: '16px' }}>
+                Account Settings
+              </div>
+              <div
+                style={{
+                  backgroundColor: 'var(--surface)',
+                  border: '1px solid var(--outline-variant)',
+                  padding: '24px',
+                  borderRadius: '0px',
+                }}
+              >
+                <p
+                  style={{
+                    fontFamily: "'Hanken Grotesk', sans-serif",
+                    fontSize: '15px',
+                    color: 'var(--text-muted)',
+                    margin: '0 0 20px 0',
+                    lineHeight: '1.5',
+                  }}
+                >
+                  Log out of your Cinematic Archive session.
+                </p>
+                <button
+                  type="button"
+                  className="detail-delete-button"
+                  onClick={handleLogout}
+                  style={{
+                    fontFamily: "'Bebas Neue', sans-serif",
+                    fontSize: '16px',
+                    letterSpacing: '1px',
+                    cursor: 'pointer',
+                    minWidth: '140px',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                  }}
+                >
+                  Log out
+                </button>
               </div>
             </div>
           </div>

@@ -346,10 +346,76 @@ async function deleteTitle(id) {
   return true;
 }
 
+/**
+ * Reads a setting value from the "Settings" tab in the spreadsheet.
+ * The Settings tab is expected to have headers "Key" and "Value".
+ */
+async function getSettingValue(key) {
+  try {
+    const range = 'Settings!A:B';
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range,
+    });
+
+    const rows = response.data.values;
+    if (!rows || rows.length === 0) {
+      throw new Error('Settings sheet is empty');
+    }
+
+    const headers = rows[0];
+    const keyColIdx = headers.indexOf('Key');
+    const valColIdx = headers.indexOf('Value');
+
+    if (keyColIdx === -1 || valColIdx === -1) {
+      throw new Error('Required headers "Key" and "Value" are missing in the Settings sheet');
+    }
+
+    const dataRows = rows.slice(1);
+    const matchRow = dataRows.find((row) => row[keyColIdx] === key);
+    if (!matchRow || matchRow[valColIdx] === undefined) {
+      return null;
+    }
+    return matchRow[valColIdx];
+  } catch (error) {
+    // If range is invalid, it usually means the Settings sheet does not exist
+    if (error.message && (error.message.includes('range') || error.message.includes('400') || error.message.includes('Requested entity was not found'))) {
+      throw new Error('Settings tab not found in the spreadsheet');
+    }
+    throw error;
+  }
+}
+
+/**
+ * Checks if the Settings tab exists and is readable.
+ */
+async function checkSettingsTabReadable() {
+  try {
+    const response = await sheets.spreadsheets.get({
+      spreadsheetId: SPREADSHEET_ID,
+    });
+    const settingsSheet = response.data.sheets.find(
+      (sheet) => sheet.properties.title === 'Settings'
+    );
+    if (!settingsSheet) return false;
+
+    // Try reading headers
+    const readResponse = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range: 'Settings!A1:B1',
+    });
+    return !!(readResponse.data.values && readResponse.data.values.length > 0);
+  } catch (error) {
+    return false;
+  }
+}
+
 module.exports = {
   getAllTitles,
   addTitle,
   updateTitle,
   deleteTitle,
   getSheetInfo,
+  getSettingValue,
+  checkSettingsTabReadable,
 };

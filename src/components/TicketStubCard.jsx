@@ -83,35 +83,18 @@ export default function TicketStubCard({ title, onClick, selectionMode = false, 
 
         <div className="ticket-card-title">{title.title}</div>
 
-        <div
-          className="ticket-card-meta"
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            flexWrap: 'wrap',
-          }}
-        >
-          <span className="ticket-card-chip">{title.year}</span>
-          <span
-            className="ticket-card-chip"
-            style={{ textTransform: 'uppercase' }}
-          >
-            {title.type}
-          </span>
-          {title.imdbRating && title.imdbRating !== 'N/A' && (
+        <div className="ticket-card-meta ticket-card-meta-main">
+          <div className="ticket-card-meta-chips">
+            <span className="ticket-card-chip">{title.year}</span>
             <span
-              className="ticket-card-imdb"
-              style={{
-                color: 'var(--primary)',
-                fontWeight: '700',
-                fontSize: '13px',
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '2px',
-                marginLeft: 'auto',
-              }}
+              className="ticket-card-chip"
+              style={{ textTransform: 'uppercase' }}
             >
+              {title.type}
+            </span>
+          </div>
+          {title.imdbRating && title.imdbRating !== 'N/A' && (
+            <span className="ticket-card-imdb">
               {title.imdbRating}{' '}
               <span style={{ fontSize: '9.5px', color: 'var(--text-muted)' }}>
                 IMDB
