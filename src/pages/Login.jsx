@@ -15,7 +15,7 @@ function FilmStrip({ top, bottom, transform }) {
         overflow: 'hidden',
         pointerEvents: 'none',
         zIndex: 0,
-        opacity: 0.40,
+        opacity: 0.32,
         transform: transform,
       }}
     >
@@ -297,7 +297,8 @@ export default function Login() {
         </div>
 
         {/* Inline style for spinner and background scroll animation */}
-        <style dangerouslySetInnerHTML={{__html: `
+        <style dangerouslySetInnerHTML={{
+          __html: `
           @keyframes spin {
             to { transform: rotate(360deg); }
           }
