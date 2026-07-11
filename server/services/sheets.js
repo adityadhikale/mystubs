@@ -410,6 +410,71 @@ async function checkSettingsTabReadable() {
   }
 }
 
+/**
+ * Sets or updates a setting value in the "Settings" tab in the spreadsheet.
+ * The Settings tab is expected to have headers "Key" and "Value".
+ */
+async function setSettingValue(key, value) {
+  try {
+    const range = 'Settings!A:B';
+    const response = await sheets.spreadsheets.values.get({
+      spreadsheetId: SPREADSHEET_ID,
+      range,
+    });
+
+    let rows = response.data.values || [];
+    if (rows.length === 0) {
+      // If the spreadsheet is empty/no headers, initialize it
+      rows = [['Key', 'Value']];
+      await sheets.spreadsheets.values.update({
+        spreadsheetId: SPREADSHEET_ID,
+        range: 'Settings!A1:B1',
+        valueInputOption: 'RAW',
+        resource: { values: [rows[0]] },
+      });
+    }
+
+    const headers = rows[0];
+    const keyColIdx = headers.indexOf('Key');
+    const valColIdx = headers.indexOf('Value');
+
+    if (keyColIdx === -1 || valColIdx === -1) {
+      throw new Error('Required headers "Key" and "Value" are missing in the Settings sheet');
+    }
+
+    const dataRows = rows.slice(1);
+    const matchRowIdx = dataRows.findIndex((row) => row[keyColIdx] === key);
+
+    if (matchRowIdx !== -1) {
+      const targetRowNumber = matchRowIdx + 2; // 1-indexed, +1 for header, +1 for slice shift
+      const row = [];
+      row[keyColIdx] = key;
+      row[valColIdx] = value;
+      await sheets.spreadsheets.values.update({
+        spreadsheetId: SPREADSHEET_ID,
+        range: `Settings!A${targetRowNumber}:B${targetRowNumber}`,
+        valueInputOption: 'RAW',
+        resource: { values: [row] },
+      });
+    } else {
+      const row = [];
+      row[keyColIdx] = key;
+      row[valColIdx] = value;
+      await sheets.spreadsheets.values.append({
+        spreadsheetId: SPREADSHEET_ID,
+        range: 'Settings!A:B',
+        valueInputOption: 'RAW',
+        resource: { values: [row] },
+      });
+    }
+  } catch (error) {
+    if (error.message && (error.message.includes('range') || error.message.includes('400') || error.message.includes('Requested entity was not found'))) {
+      throw new Error('Settings tab not found in the spreadsheet');
+    }
+    throw error;
+  }
+}
+
 module.exports = {
   getAllTitles,
   addTitle,
@@ -417,5 +482,6 @@ module.exports = {
   deleteTitle,
   getSheetInfo,
   getSettingValue,
+  setSettingValue,
   checkSettingsTabReadable,
 };
