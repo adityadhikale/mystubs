@@ -15,7 +15,7 @@ function FilmStrip({ top, bottom, transform }) {
         overflow: 'hidden',
         pointerEvents: 'none',
         zIndex: 0,
-        opacity: 0.40,
+        opacity: 0.35,
         transform: transform,
       }}
     >
