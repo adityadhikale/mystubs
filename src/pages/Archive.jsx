@@ -125,10 +125,6 @@ function Filters({
 }) {
   const [mobileOpen, setMobileOpen] = useState(false);
 
-  const statuses = [
-    'All',
-    ...Array.from(new Set(titles.map((t) => t.status).filter(Boolean))),
-  ];
   const types = [
     'All',
     ...Array.from(
@@ -150,9 +146,9 @@ function Filters({
 
   const statusOptions = [
     { value: 'All', label: 'All Statuses' },
-    ...statuses
-      .filter((status) => status !== 'All')
-      .map((status) => ({ value: status, label: status })),
+    { value: 'Watchlist', label: 'Watchlist' },
+    { value: 'Watching', label: 'Watching' },
+    { value: 'Completed', label: 'Completed' },
   ];
   const typeOptions = [
     { value: 'All', label: 'All Types' },
@@ -692,7 +688,8 @@ export default function Archive() {
 
     // Status Filter
     if (statusFilter !== 'All') {
-      if (t.status !== statusFilter) {
+      const titleStatus = t.status || 'Watchlist';
+      if (titleStatus.toLowerCase() !== statusFilter.toLowerCase()) {
         return false;
       }
     }

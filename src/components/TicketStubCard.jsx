@@ -95,10 +95,8 @@ export default function TicketStubCard({ title, onClick, selectionMode = false, 
           </div>
           {title.imdbRating && title.imdbRating !== 'N/A' && (
             <span className="ticket-card-imdb">
-              {title.imdbRating}{' '}
-              <span style={{ fontSize: '9.5px', color: 'var(--text-muted)' }}>
-                IMDB
-              </span>
+              <span className="rating-value">{title.imdbRating}</span>
+              <span className="rating-label">IMDB</span>
             </span>
           )}
         </div>

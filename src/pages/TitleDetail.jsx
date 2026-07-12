@@ -30,9 +30,16 @@ function InfoPill({ children }) {
 }
 
 // Interactive 5-star rating picker using unicode stars
-function StarPicker({ rating, onChange }) {
+function StarPicker({ rating, onChange, disabled }) {
   return (
-    <div style={{ display: 'flex', gap: '6px' }}>
+    <div
+      style={{
+        display: 'flex',
+        gap: '6px',
+        opacity: disabled ? 0.45 : 1,
+        pointerEvents: disabled ? 'none' : 'auto',
+      }}
+    >
       {Array.from({ length: 5 }, (_, index) => {
         const value = index + 1;
         const active = value <= rating;
@@ -41,6 +48,7 @@ function StarPicker({ rating, onChange }) {
             key={value}
             type="button"
             onClick={() => onChange(value)}
+            disabled={disabled}
             style={{
               border: 'none',
               background: 'transparent',
@@ -49,7 +57,7 @@ function StarPicker({ rating, onChange }) {
                 : 'rgba(242, 242, 242, 0.24)',
               fontSize: '26px',
               padding: 0,
-              cursor: 'pointer',
+              cursor: disabled ? 'not-allowed' : 'pointer',
               lineHeight: 1,
             }}
             aria-label={`${value} star${value === 1 ? '' : 's'}`}
@@ -385,6 +393,7 @@ export default function TitleDetail() {
 
   const watchedOnValue = formState.watchedOn;
   const showOtherInput = watchedOnValue === 'Other';
+  const isCompleted = formState.status === 'Completed';
 
   const updateField = (field, value) => {
     setFormState((current) => ({
@@ -609,6 +618,22 @@ export default function TitleDetail() {
               </div>
             </div>
 
+            {!isCompleted && (
+              <div
+                style={{
+                  fontSize: '13px',
+                  color: 'var(--primary)',
+                  fontFamily: "'Hanken Grotesk', sans-serif",
+                  marginTop: '12px',
+                  fontWeight: '600',
+                  textTransform: 'uppercase',
+                  letterSpacing: '0.5px'
+                }}
+              >
+                * Watched info available once marked Completed
+              </div>
+            )}
+
             <div>
               <div className="detail-section-label">Platform / Watched On</div>
               <select
@@ -616,9 +641,13 @@ export default function TitleDetail() {
                 onChange={(event) =>
                   updateField('watchedOn', event.target.value)
                 }
-                disabled={saving}
+                disabled={saving || !isCompleted}
                 className="theme-select"
-                style={{ width: '100%' }}
+                style={{
+                  width: '100%',
+                  opacity: !isCompleted ? 0.45 : 1,
+                  cursor: !isCompleted ? 'not-allowed' : 'default',
+                }}
               >
                 <option value="">Select platform</option>
                 {platformOptions.map((option) => (
@@ -635,13 +664,15 @@ export default function TitleDetail() {
                   onChange={(event) =>
                     updateField('otherWatchedOn', event.target.value)
                   }
-                  disabled={saving}
+                  disabled={saving || !isCompleted}
                   placeholder="Specify other platform"
                   className="theme-control"
                   style={{
                     width: '100%',
                     marginTop: '10px',
                     boxSizing: 'border-box',
+                    opacity: !isCompleted ? 0.45 : 1,
+                    cursor: !isCompleted ? 'not-allowed' : 'default',
                   }}
                 />
               ) : null}
@@ -656,16 +687,17 @@ export default function TitleDetail() {
                   updateField('dateWatched', event.target.value)
                 }
                 onClick={(event) => {
-                  if (typeof event.target.showPicker === 'function') {
+                  if (isCompleted && typeof event.target.showPicker === 'function') {
                     event.target.showPicker();
                   }
                 }}
-                disabled={saving}
+                disabled={saving || !isCompleted}
                 className="theme-control"
                 style={{
                   width: '100%',
                   boxSizing: 'border-box',
-                  cursor: 'pointer',
+                  cursor: !isCompleted ? 'not-allowed' : 'pointer',
+                  opacity: !isCompleted ? 0.45 : 1,
                 }}
               />
             </div>
@@ -675,8 +707,24 @@ export default function TitleDetail() {
 
           <div className="detail-column detail-column-right detail-field-stack">
             <div>
-              <div className="detail-section-label">Personal</div>
-              <div className="detail-note-card">
+              <div style={{ display: 'flex', alignItems: 'baseline', justifyContent: 'space-between', flexWrap: 'wrap' }}>
+                <div className="detail-section-label">Personal</div>
+                {!isCompleted && (
+                  <span
+                    style={{
+                      fontSize: '11px',
+                      color: 'var(--primary)',
+                      fontFamily: "'Hanken Grotesk', sans-serif",
+                      fontWeight: '600',
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.5px'
+                    }}
+                  >
+                    Available once Completed
+                  </span>
+                )}
+              </div>
+              <div className="detail-note-card" style={{ opacity: !isCompleted ? 0.8 : 1 }}>
                 <div style={{ marginBottom: '14px' }}>
                   <SectionLabel>My Rating</SectionLabel>
                   <StarPicker
@@ -684,6 +732,7 @@ export default function TitleDetail() {
                     onChange={(value) => {
                       if (!saving) updateField('myRating', value);
                     }}
+                    disabled={saving || !isCompleted}
                   />
                 </div>
 
@@ -692,7 +741,7 @@ export default function TitleDetail() {
                   <div className="detail-rewatch-row">
                     <button
                       type="button"
-                      disabled={saving}
+                      disabled={saving || !isCompleted}
                       onClick={() =>
                         updateField(
                           'rewatchCount',
@@ -705,9 +754,9 @@ export default function TitleDetail() {
                         border: '1px solid rgba(255,255,255,0.1)',
                         backgroundColor: 'rgba(255,255,255,0.04)',
                         color: 'var(--text-color)',
-                        cursor: 'pointer',
+                        cursor: !isCompleted ? 'not-allowed' : 'pointer',
                         fontSize: '20px',
-                        opacity: saving ? 0.5 : 1,
+                        opacity: (saving || !isCompleted) ? 0.45 : 1,
                       }}
                     >
                       -
@@ -719,13 +768,17 @@ export default function TitleDetail() {
                       onChange={(event) =>
                         updateField('rewatchCount', Number(event.target.value))
                       }
-                      disabled={saving}
+                      disabled={saving || !isCompleted}
                       className="theme-control detail-rewatch-count"
-                      style={{ boxSizing: 'border-box' }}
+                      style={{
+                        boxSizing: 'border-box',
+                        opacity: !isCompleted ? 0.45 : 1,
+                        cursor: !isCompleted ? 'not-allowed' : 'default',
+                      }}
                     />
                     <button
                       type="button"
-                      disabled={saving}
+                      disabled={saving || !isCompleted}
                       onClick={() =>
                         updateField(
                           'rewatchCount',
@@ -738,9 +791,9 @@ export default function TitleDetail() {
                         border: '1px solid rgba(255,255,255,0.1)',
                         backgroundColor: 'rgba(255,255,255,0.04)',
                         color: 'var(--text-color)',
-                        cursor: 'pointer',
+                        cursor: !isCompleted ? 'not-allowed' : 'pointer',
                         fontSize: '20px',
-                        opacity: saving ? 0.5 : 1,
+                        opacity: (saving || !isCompleted) ? 0.45 : 1,
                       }}
                     >
                       +
@@ -755,7 +808,7 @@ export default function TitleDetail() {
                     onChange={(event) =>
                       updateField('notes', event.target.value)
                     }
-                    disabled={saving}
+                    disabled={saving || !isCompleted}
                     rows={5}
                     className="theme-control"
                     style={{
@@ -763,6 +816,8 @@ export default function TitleDetail() {
                       padding: '12px 14px',
                       resize: 'vertical',
                       boxSizing: 'border-box',
+                      opacity: !isCompleted ? 0.45 : 1,
+                      cursor: !isCompleted ? 'not-allowed' : 'default',
                     }}
                   />
                 </div>

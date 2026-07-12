@@ -237,17 +237,10 @@ export default function Profile() {
       {loading ? (
         <div className="loading-text">LOADING STATUS...</div>
       ) : (
-        <div
-          style={{
-            display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-            gap: '32px',
-            marginTop: '24px',
-          }}
-        >
+        <div className="profile-layout-grid">
           {/* Left Column: Connection Status & Export Archive */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-            <div>
+          <div className="profile-column">
+            <div className="profile-section-connection">
               <div className="detail-section-label" style={{ marginBottom: '16px' }}>
                 Connection Status
               </div>
@@ -364,7 +357,7 @@ export default function Profile() {
               </div>
             </div>
 
-            <div>
+            <div className="profile-section-export">
               <div className="detail-section-label" style={{ marginBottom: '16px' }}>
                 Export Archive
               </div>
@@ -431,7 +424,7 @@ export default function Profile() {
             </div>
 
             {/* Logout Section */}
-            <div style={{ marginTop: '24px' }}>
+            <div className="profile-section-account" style={{ marginTop: '24px' }}>
               <div className="detail-section-label" style={{ marginBottom: '16px' }}>
                 Account Settings
               </div>
@@ -476,8 +469,8 @@ export default function Profile() {
           </div>
 
           {/* Right Column: Archive Stats & Illustration */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '32px' }}>
-            <div>
+          <div className="profile-column">
+            <div className="profile-section-stats">
               <div className="detail-section-label" style={{ marginBottom: '16px' }}>
                 Archive Stats
               </div>
@@ -700,6 +693,7 @@ export default function Profile() {
 
             {/* Decorative Film Reel Illustration */}
             <div
+              className="profile-section-illustration"
               style={{
                 display: 'flex',
                 flexDirection: 'column',

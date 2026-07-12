@@ -65,7 +65,7 @@ async function callTMDB(path, queryParams = {}) {
     const errorData = await response.json().catch(() => ({}));
     throw new Error(
       errorData.status_message ||
-        `TMDB API request failed with status ${response.status}`,
+      `TMDB API request failed with status ${response.status}`,
     );
   }
   return response.json();
@@ -86,7 +86,7 @@ async function getTrendingMovies() {
     const data = await callTMDB('/3/trending/movie/week');
     const rawMovies = data.results || [];
 
-    const normalized = rawMovies.slice(0, 5).map((movie) => {
+    const normalized = rawMovies.slice(0, 20).map((movie) => {
       const year = movie.release_date ? movie.release_date.split('-')[0] : '';
       const genres = (movie.genre_ids || [])
         .map((id) => MOVIE_GENRES[id])
@@ -136,8 +136,8 @@ async function searchTMDB(title) {
           type === 'movie' ? item.release_date : item.first_air_date
         )
           ? (type === 'movie' ? item.release_date : item.first_air_date).split(
-              '-',
-            )[0]
+            '-',
+          )[0]
           : '';
         const posterUrl = item.poster_path
           ? `https://image.tmdb.org/t/p/w500${item.poster_path}`
@@ -150,6 +150,9 @@ async function searchTMDB(title) {
           Poster: posterUrl,
           Type: type,
           source: 'tmdb',
+          imdbRating: item.vote_average
+            ? parseFloat(item.vote_average.toFixed(1))
+            : 0,
         };
       });
 
@@ -196,9 +199,9 @@ async function getTMDBDetails(tmdbId, mediaType) {
       cleanType === 'tv' ? details.first_air_date : details.release_date
     )
       ? (cleanType === 'tv'
-          ? details.first_air_date
-          : details.release_date
-        ).split('-')[0]
+        ? details.first_air_date
+        : details.release_date
+      ).split('-')[0]
       : '';
 
     let runtime = 'N/A';

@@ -66,14 +66,22 @@ function SearchResultCard({ item, onClick }) {
 
         <div className="ticket-card-title">{item.Title}</div>
 
-        <div className="ticket-card-meta">
-          <span className="ticket-card-chip">{item.Year}</span>
-          <span
-            className="ticket-card-chip"
-            style={{ textTransform: 'uppercase' }}
-          >
-            {item.Type}
-          </span>
+        <div className="ticket-card-meta ticket-card-meta-main">
+          <div className="ticket-card-meta-chips">
+            <span className="ticket-card-chip">{item.Year}</span>
+            <span
+              className="ticket-card-chip"
+              style={{ textTransform: 'uppercase' }}
+            >
+              {item.Type}
+            </span>
+          </div>
+          {item.imdbRating && item.imdbRating !== 'N/A' && Number(item.imdbRating) > 0 && (
+            <span className="ticket-card-imdb">
+              <span className="rating-value">{item.imdbRating}</span>
+              <span className="rating-label">IMDB</span>
+            </span>
+          )}
         </div>
       </div>
     </article>
@@ -618,7 +626,10 @@ export default function Add() {
                   <TicketStubCard
                     key={item.title}
                     title={item}
-                    onClick={() => setSearchQuery(item.title)}
+                    onClick={() => {
+                      setSearchQuery(item.title);
+                      setSelectedImdbId(item.id);
+                    }}
                   />
                 ))}
               </div>

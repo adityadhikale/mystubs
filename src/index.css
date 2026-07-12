@@ -296,10 +296,20 @@ h6 {
 .ticket-card-imdb {
   color: var(--primary);
   font-weight: 700;
-  font-size: 13px;
+  font-size: 20px;
+  font-family: 'Bebas Neue', sans-serif;
   display: inline-flex;
-  align-items: center;
-  gap: 2px;
+  align-items: baseline;
+  gap: 3px;
+  line-height: 1;
+}
+
+.ticket-card-imdb .rating-label {
+  font-size: 10.5px;
+  color: var(--text-muted);
+  font-family: 'Hanken Grotesk', sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 
@@ -768,7 +778,7 @@ h6 {
   cursor: pointer;
 }
 
-.archive-dropdown-trigger > span:first-child {
+.archive-dropdown-trigger>span:first-child {
   min-width: 0;
   flex: 1 1 auto;
   overflow: hidden;
@@ -966,6 +976,33 @@ h6 {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
+  .ticket-card-body {
+    padding: 10px;
+  }
+
+  .ticket-card-title {
+    font-size: 15px;
+    margin-bottom: 6px;
+  }
+
+  .ticket-card-meta-chips {
+    gap: 4px;
+  }
+
+  .ticket-card-meta .ticket-card-chip {
+    padding: 2px 5px;
+    font-size: 10px;
+  }
+
+  .ticket-card-genres .ticket-card-chip {
+    font-size: 10px !important;
+    padding: 2px 5px !important;
+  }
+
+  .ticket-card-imdb {
+    font-size: 14px;
+  }
+
   .archive-filter-row {
     gap: 10px;
   }
@@ -1009,7 +1046,9 @@ h6 {
   .archive-sort-slot {
     margin-left: 0;
   }
+}
 
+@media (max-width: 900px) {
   .ticket-card-meta-main {
     flex-direction: column;
     align-items: stretch;
@@ -1025,12 +1064,10 @@ h6 {
   }
 
   .ticket-card-imdb {
-    font-size: 12px;
+    font-size: 16px;
     align-self: flex-end;
   }
-}
 
-@media (max-width: 900px) {
   .detail-edit-grid,
   .title-detail-top-section {
     grid-template-columns: 1fr;
@@ -1421,6 +1458,7 @@ h6 {
 }
 
 @keyframes ticket-squeeze-animation {
+
   0%,
   12% {
     transform: scale(1);
@@ -1441,6 +1479,7 @@ h6 {
 }
 
 @keyframes punch-hole-animation {
+
   0%,
   15% {
     transform: scale(0);
@@ -1458,6 +1497,7 @@ h6 {
 }
 
 @keyframes punch-edge-animation {
+
   0%,
   15% {
     transform: scale(0);
@@ -1486,6 +1526,7 @@ h6 {
 }
 
 @keyframes particle-1-anim {
+
   0%,
   18% {
     transform: translate(0, 0) scale(1);
@@ -1504,6 +1545,7 @@ h6 {
 }
 
 @keyframes particle-2-anim {
+
   0%,
   18% {
     transform: translate(0, 0) scale(1);
@@ -1522,6 +1564,7 @@ h6 {
 }
 
 @keyframes particle-3-anim {
+
   0%,
   18% {
     transform: translate(0, 0) scale(1);
@@ -1560,8 +1603,7 @@ h6 {
   display: flex;
   align-items: center;
   justify-content: center;
-  animation: toast-slide-in 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275)
-    forwards;
+  animation: toast-slide-in 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
 }
 
 .toast-notification span {
@@ -2153,7 +2195,7 @@ h6 {
   box-sizing: border-box;
   flex-wrap: wrap;
   gap: 16px;
-  
+
   /* Initial hidden state */
   opacity: 0;
   max-height: 0px;
@@ -2163,7 +2205,7 @@ h6 {
   border-bottom-width: 0px;
   overflow: hidden;
   transform: translateY(-10px);
-  transition: 
+  transition:
     max-height 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1),
     transform 0.3s cubic-bezier(0.4, 0, 0.2, 1),
@@ -2181,4 +2223,50 @@ h6 {
   border-bottom-width: 1px;
   transform: translateY(0);
   overflow: visible;
+}
+
+/* Profile Page Layout Classes */
+.profile-layout-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 32px;
+  margin-top: 24px;
+}
+
+.profile-column {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+}
+
+@media (max-width: 900px) {
+  .profile-layout-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 32px;
+  }
+
+  .profile-column {
+    display: contents;
+  }
+
+  .profile-section-stats {
+    order: 1;
+  }
+
+  .profile-section-connection {
+    order: 2;
+  }
+
+  .profile-section-export {
+    order: 3;
+  }
+
+  .profile-section-account {
+    order: 4;
+  }
+
+  .profile-section-illustration {
+    order: 5;
+  }
 }
