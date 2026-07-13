@@ -142,6 +142,16 @@ export default function TitleDetail() {
   });
 
   useEffect(() => {
+    if (loading) {
+      document.title = 'MyStubs · Loading...';
+    } else if (title && title.title) {
+      document.title = `MyStubs · ${title.title}`;
+    } else {
+      document.title = 'MyStubs · Title Detail';
+    }
+  }, [loading, title]);
+
+  useEffect(() => {
     if (!loading) return;
     const timer = setInterval(() => {
       setChaserIndex((prev) => (prev + 1) % 40);

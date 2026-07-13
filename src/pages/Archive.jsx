@@ -333,6 +333,10 @@ function Grid({ titles, selectionMode, selectedIds, onToggleCardSelection }) {
 
 // Main Archive page component: handles data loading, in-memory filtering/sorting, and bulk operations (delete, status update, CSV export)
 export default function Archive() {
+  useEffect(() => {
+    document.title = 'MyStubs · Your Archive';
+  }, []);
+
   const [titles, setTitles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);

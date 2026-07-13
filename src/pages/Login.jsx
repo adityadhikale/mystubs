@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { login } from '../services/api';
 
@@ -66,6 +66,10 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    document.title = 'MyStubs · Archive Entry';
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();

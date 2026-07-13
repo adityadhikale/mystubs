@@ -7,6 +7,10 @@ import { getTodayDateString, exportToCsv, exportToJson } from '../utils/exportUt
 
 // Main Profile page component: handles connection checks, statistics calculations, and backup exports
 export default function Profile() {
+  useEffect(() => {
+    document.title = 'MyStubs · Profile';
+  }, []);
+
   const navigate = useNavigate();
   const [status, setStatus] = useState(null);
 

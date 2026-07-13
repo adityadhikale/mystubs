@@ -428,6 +428,10 @@ function DetailModal({ imdbID, existingSourceIds, onClose, onSuccess }) {
 
 // Main Add page component: orchestrates search input, loading of existing IDs (to detect duplicates), and trending list suggestions
 export default function Add() {
+  useEffect(() => {
+    document.title = 'MyStubs · Add a Stub';
+  }, []);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [results, setResults] = useState(null);
   const [loading, setLoading] = useState(false);

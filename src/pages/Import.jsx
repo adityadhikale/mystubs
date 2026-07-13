@@ -59,6 +59,10 @@ function stringSimilarity(str1, str2) {
 
 // Main Bulk Import component: manages pasted text inputs, parsed rows, batch API lookups, user overrides/selections, and final batch execution
 export default function Import() {
+  useEffect(() => {
+    document.title = 'MyStubs · Bulk Import';
+  }, []);
+
   const navigate = useNavigate();
 
   const [rawText, setRawText] = useState('');
