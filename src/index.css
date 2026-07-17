@@ -1000,7 +1000,7 @@ h6 {
   }
 
   .ticket-card-imdb {
-    font-size: 14px;
+    display: none;
   }
 
   .archive-filter-row {
