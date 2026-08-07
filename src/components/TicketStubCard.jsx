@@ -15,6 +15,37 @@ function StarRating({ rating }) {
   );
 }
 
+function getStatusIcon(status) {
+  const normalized = (status || '').toLowerCase();
+  if (normalized === 'completed') {
+    return (
+      <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <rect x="3" y="9" width="18" height="12" rx="1" />
+        <path d="M3 9l2 -5h4l-2 5" />
+        <path d="M9 9l2 -5h4l-2 5" />
+        <path d="M15 9l2 -5h3l-1 5" />
+        <path d="M3 9h18" />
+      </svg>
+    );
+  }
+  if (normalized === 'watching') {
+    return (
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
+        <circle cx="12" cy="12" r="3" />
+      </svg>
+    );
+  }
+  if (normalized === 'watchlist') {
+    return (
+      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
+        <path d="M17 19l-5-3.5-5 3.5V6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2z" />
+      </svg>
+    );
+  }
+  return null;
+}
+
 // Renders an individual title as a retro ticket stub card, linking to its details page or triggering selection toggles
 export default function TicketStubCard({ title, onClick, selectionMode = false, selected = false }) {
   const CardContent = (
@@ -60,7 +91,12 @@ export default function TicketStubCard({ title, onClick, selectionMode = false, 
           </div>
         )}
         {title.status && (
-          <span className="ticket-card-status">{title.status}</span>
+          <span className="ticket-card-status">
+            <span className="ticket-card-status-icon" aria-hidden="true">
+              {getStatusIcon(title.status)}
+            </span>
+            <span className="ticket-card-status-text">{title.status}</span>
+          </span>
         )}
         <div className="ticket-card-poster-inner">
           <img

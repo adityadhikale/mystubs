@@ -255,6 +255,16 @@ h6 {
   border: 1px solid var(--outline-variant);
   color: var(--primary);
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.ticket-card-status-icon {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  line-height: 0;
 }
 
 .ticket-card-body {
@@ -978,6 +988,31 @@ h6 {
 
   .ticket-card-body {
     padding: 10px;
+  }
+
+  .ticket-card-status {
+    top: 0;
+    right: 0;
+    width: 25px;
+    height: 25px;
+    padding: 0;
+    background-color: var(--primary);
+    border: none;
+    display: flex;
+    align-items: flex-start;
+    justify-content: flex-end;
+    gap: 0;
+    clip-path: polygon(100% 0, 100% 100%, 0 0);
+  }
+
+  .ticket-card-status-icon {
+    display: flex;
+    color: var(--on-primary);
+    margin: 2px 2px 0 0;
+  }
+
+  .ticket-card-status-text {
+    display: none;
   }
 
   .ticket-card-title {
