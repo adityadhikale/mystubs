@@ -41,62 +41,74 @@ function CastMember({ member }) {
       <div
         style={{
           width: '90px',
-          height: '120px',
-          borderRadius: '4px',
-          overflow: 'hidden',
-          border: '1px solid var(--outline-variant)',
-          backgroundColor: 'var(--surface-hover)',
           display: 'flex',
+          flexDirection: 'column',
           alignItems: 'center',
-          justifyContent: 'center',
-          marginBottom: '8px',
+          justifyContent: 'flex-start',
         }}
       >
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={member.name}
-            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-            onError={(event) => {
-              event.target.style.display = 'none';
-            }}
-          />
-        ) : (
-          <svg
-            width="36"
-            height="36"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="var(--outline-variant)"
-            strokeWidth="1.5"
-          >
-            <circle cx="12" cy="8" r="4" />
-            <path d="M4 20c0-4 3.5-7 8-7s8 3 8 7" />
-          </svg>
-        )}
-      </div>
-      <div
-        style={{
-          fontSize: '13px',
-          fontWeight: '600',
-          color: 'var(--text-color)',
-          lineHeight: 1.3,
-        }}
-      >
-        {member.name}
-      </div>
-      {member.character && (
         <div
           style={{
-            fontSize: '12px',
-            color: 'var(--text-muted)',
-            lineHeight: 1.3,
-            marginTop: '2px',
+            width: '90px',
+            height: '120px',
+            borderRadius: '8px',
+            overflow: 'hidden',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+            backgroundColor: 'var(--surface-hover)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            marginBottom: '8px',
           }}
         >
-          {member.character}
+          {imageUrl ? (
+            <img
+              src={imageUrl}
+              alt={member.name}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+              onError={(event) => {
+                event.target.style.display = 'none';
+              }}
+            />
+          ) : (
+            <svg
+              width="36"
+              height="36"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="var(--outline-variant)"
+              strokeWidth="1.5"
+            >
+              <circle cx="12" cy="8" r="4" />
+              <path d="M4 20c0-4 3.5-7 8-7s8 3 8 7" />
+            </svg>
+          )}
         </div>
-      )}
+        <div
+          style={{
+            fontSize: '13px',
+            fontWeight: '600',
+            color: 'var(--text-color)',
+            lineHeight: 1.3,
+            width: '100%',
+          }}
+        >
+          {member.name}
+        </div>
+        {member.character && (
+          <div
+            style={{
+              fontSize: '12px',
+              color: 'var(--text-muted)',
+              lineHeight: 1.3,
+              marginTop: '2px',
+              width: '100%',
+            }}
+          >
+            {member.character}
+          </div>
+        )}
+      </div>
     </div>
   );
 }
@@ -655,11 +667,6 @@ export default function TitleDetail() {
             </div>
             <hr style={{ border: 'none', borderTop: '1px dashed var(--outline-variant)', margin: '4px 0' }} />
             <div>
-              <SectionLabel>Cast</SectionLabel>
-              <CastGrid cast={title.cast} />
-            </div>
-            <hr style={{ border: 'none', borderTop: '1px dashed var(--outline-variant)', margin: '4px 0' }} />
-            <div>
               <SectionLabel>Plot</SectionLabel>
               <div
                 style={{
@@ -670,6 +677,11 @@ export default function TitleDetail() {
               >
                 {title.plot}
               </div>
+            </div>
+            <hr style={{ border: 'none', borderTop: '1px dashed var(--outline-variant)', margin: '4px 0' }} />
+            <div>
+              <SectionLabel>Cast</SectionLabel>
+              <CastGrid cast={title.cast} />
             </div>
           </div>
         </div>

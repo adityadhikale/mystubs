@@ -683,7 +683,10 @@ export default function Archive() {
       const q = searchQuery.toLowerCase();
       const titleMatch = t.title?.toLowerCase().includes(q);
       const directorMatch = t.director?.toLowerCase().includes(q);
-      const castMatch = t.cast?.some((c) => c.toLowerCase().includes(q));
+      const castMatch = t.cast?.some((c) => {
+        const castName = typeof c === 'string' ? c : c?.name || '';
+        return castName.toLowerCase().includes(q);
+      });
       const genreMatch = t.genre?.some((g) => g.toLowerCase().includes(q));
       if (!titleMatch && !directorMatch && !castMatch && !genreMatch) {
         return false;
