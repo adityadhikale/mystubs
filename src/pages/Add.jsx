@@ -11,6 +11,77 @@ import Toast from '../components/Toast';
 import TicketStubCard from '../components/TicketStubCard';
 import { formatReleaseDate, isUpcoming } from '../utils/dateUtils';
 
+const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w185';
+
+function CastMember({ member }) {
+  const imageUrl = member.profilePath
+    ? `${TMDB_IMAGE_BASE}${member.profilePath}`
+    : null;
+
+  return (
+    <div style={{ width: '80px', flexShrink: 0, textAlign: 'center' }}>
+      <div
+        style={{
+          width: '80px',
+          height: '106px',
+          borderRadius: '4px',
+          overflow: 'hidden',
+          border: '1px solid var(--outline-variant)',
+          backgroundColor: 'var(--surface-hover)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: '6px',
+        }}
+      >
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={member.name}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onError={(event) => {
+              event.target.style.display = 'none';
+            }}
+          />
+        ) : (
+          <svg
+            width="32"
+            height="32"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--outline-variant)"
+            strokeWidth="1.5"
+          >
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20c0-4 3.5-7 8-7s8 3 8 7" />
+          </svg>
+        )}
+      </div>
+      <div style={{ fontSize: '12px', fontWeight: '600', color: 'var(--text-color)', lineHeight: 1.3 }}>
+        {member.name}
+      </div>
+      {member.character && (
+        <div style={{ fontSize: '11px', color: 'var(--text-muted)', lineHeight: 1.3, marginTop: '2px' }}>
+          {member.character}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CastGrid({ cast }) {
+  if (!cast || cast.length === 0) {
+    return <div style={{ color: 'var(--text)' }}>N/A</div>;
+  }
+  return (
+    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px' }}>
+      {cast.map((member, index) => (
+        <CastMember key={`${member.name}-${index}`} member={member} />
+      ))}
+    </div>
+  );
+}
+
 // Renders a search result preview as a clickable ticket stub
 function SearchResultCard({ item, onClick }) {
   return (
@@ -284,39 +355,60 @@ function DetailModal({ imdbID, existingSourceIds, onClose, onSuccess }) {
               </div>
 
               <div style={{ display: 'grid', gap: '14px' }}>
-                <div>
-                  <div className="detail-section-label">Release Date</div>
-                  <div style={{ color: 'var(--text)' }}>
-                    {!details.Released || details.Released === 'N/A'
-                      ? 'N/A'
-                      : formatReleaseDate(details.Released)}
-                  </div>
-                </div>
-                {details.suggestedPlatform &&
-                  details.suggestedPlatform.trim() !== '' && (
-                    <div>
-                      <div className="detail-section-label">
-                        Suggested Platform
-                      </div>
-                      <div style={{ color: 'var(--text)' }}>
-                        {details.suggestedPlatform}
-                      </div>
+                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px' }}>
+                  <div
+                    style={{
+                      flex: '1 1 160px',
+                      border: '1px solid var(--outline-variant)',
+                      padding: '14px',
+                      backgroundColor: 'var(--surface-hover)',
+                    }}
+                  >
+                    <div className="detail-section-label">Release Date</div>
+                    <div style={{ color: 'var(--text)' }}>
+                      {!details.Released || details.Released === 'N/A'
+                        ? 'N/A'
+                        : formatReleaseDate(details.Released)}
                     </div>
-                  )}
-                <div>
-                  <div className="detail-section-label">Director</div>
-                  <div style={{ color: 'var(--text)' }}>
-                    {details.Director || 'N/A'}
                   </div>
+                  <div
+                    style={{
+                      flex: '1 1 160px',
+                      border: '1px solid var(--outline-variant)',
+                      padding: '14px',
+                      backgroundColor: 'var(--surface-hover)',
+                    }}
+                  >
+                    <div className="detail-section-label">Director</div>
+                    <div style={{ color: 'var(--text)' }}>
+                      {details.Director || 'N/A'}
+                    </div>
+                  </div>
+                  {details.suggestedPlatform &&
+                    details.suggestedPlatform.trim() !== '' && (
+                      <div
+                        style={{
+                          flex: '1 1 160px',
+                          border: '1px solid var(--outline-variant)',
+                          padding: '14px',
+                          backgroundColor: 'var(--surface-hover)',
+                        }}
+                      >
+                        <div className="detail-section-label">
+                          Suggested Platform
+                        </div>
+                        <div style={{ color: 'var(--text)' }}>
+                          {details.suggestedPlatform}
+                        </div>
+                      </div>
+                    )}
                 </div>
+                <hr style={{ border: 'none', borderTop: '1px dashed var(--outline-variant)', margin: '4px 0' }} />
                 <div>
                   <div className="detail-section-label">Cast</div>
-                  <div style={{ color: 'var(--text)' }}>
-                    {details.Actors && details.Actors.length > 0
-                      ? details.Actors.join(', ')
-                      : 'N/A'}
-                  </div>
+                  <CastGrid cast={details.Actors} />
                 </div>
+                <hr style={{ border: 'none', borderTop: '1px dashed var(--outline-variant)', margin: '4px 0' }} />
                 <div>
                   <div className="detail-section-label">Plot</div>
                   <div

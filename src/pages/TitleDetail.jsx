@@ -29,6 +29,98 @@ function InfoPill({ children }) {
   return <span className="detail-chip">{children}</span>;
 }
 
+const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w185';
+
+function CastMember({ member }) {
+  const imageUrl = member.profilePath
+    ? `${TMDB_IMAGE_BASE}${member.profilePath}`
+    : null;
+
+  return (
+    <div style={{ width: '90px', flexShrink: 0, textAlign: 'center' }}>
+      <div
+        style={{
+          width: '90px',
+          height: '120px',
+          borderRadius: '4px',
+          overflow: 'hidden',
+          border: '1px solid var(--outline-variant)',
+          backgroundColor: 'var(--surface-hover)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          marginBottom: '8px',
+        }}
+      >
+        {imageUrl ? (
+          <img
+            src={imageUrl}
+            alt={member.name}
+            style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            onError={(event) => {
+              event.target.style.display = 'none';
+            }}
+          />
+        ) : (
+          <svg
+            width="36"
+            height="36"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="var(--outline-variant)"
+            strokeWidth="1.5"
+          >
+            <circle cx="12" cy="8" r="4" />
+            <path d="M4 20c0-4 3.5-7 8-7s8 3 8 7" />
+          </svg>
+        )}
+      </div>
+      <div
+        style={{
+          fontSize: '13px',
+          fontWeight: '600',
+          color: 'var(--text-color)',
+          lineHeight: 1.3,
+        }}
+      >
+        {member.name}
+      </div>
+      {member.character && (
+        <div
+          style={{
+            fontSize: '12px',
+            color: 'var(--text-muted)',
+            lineHeight: 1.3,
+            marginTop: '2px',
+          }}
+        >
+          {member.character}
+        </div>
+      )}
+    </div>
+  );
+}
+
+function CastGrid({ cast }) {
+  if (!cast || cast.length === 0) {
+    return <div style={{ fontSize: '15px', color: 'var(--text-muted)' }}>No cast information available.</div>;
+  }
+  return (
+    <div
+      style={{
+        display: 'flex',
+        flexWrap: 'wrap',
+        gap: '16px',
+      }}
+    >
+      {cast.map((member, index) => (
+        <CastMember key={`${member.name}-${index}`} member={member} />
+      ))}
+    </div>
+  );
+}
+
+
 // Interactive 5-star rating picker using unicode stars
 function StarPicker({ rating, onChange, disabled }) {
   return (
@@ -511,44 +603,62 @@ export default function TitleDetail() {
           </div>
 
           <div style={{ display: 'grid', gap: '12px' }}>
-            {title.releaseDate && title.releaseDate !== 'N/A' && (
-              <div>
-                <SectionLabel>Release Date</SectionLabel>
+            <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px' }}>
+              {title.releaseDate && title.releaseDate !== 'N/A' && (
                 <div
                   style={{
-                    fontSize: '17px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '10px',
+                    flex: '1 1 200px',
+                    border: '1px solid var(--outline-variant)',
+                    padding: '14px',
+                    backgroundColor: 'var(--surface-hover)',
                   }}
                 >
-                  <span>{formatReleaseDate(title.releaseDate)}</span>
-                  {isUpcoming(title.releaseDate) && (
-                    <span
-                      className="detail-chip"
-                      style={{
-                        fontSize: '11px',
-                        color: 'var(--primary)',
-                        borderColor: 'var(--primary)',
-                        textTransform: 'uppercase',
-                        padding: '2px 6px',
-                        fontWeight: 'bold',
-                      }}
-                    >
-                      Upcoming
-                    </span>
-                  )}
+                  <SectionLabel>Release Date</SectionLabel>
+                  <div
+                    style={{
+                      fontSize: '17px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px',
+                    }}
+                  >
+                    <span>{formatReleaseDate(title.releaseDate)}</span>
+                    {isUpcoming(title.releaseDate) && (
+                      <span
+                        className="detail-chip"
+                        style={{
+                          fontSize: '11px',
+                          color: 'var(--primary)',
+                          borderColor: 'var(--primary)',
+                          textTransform: 'uppercase',
+                          padding: '2px 6px',
+                          fontWeight: 'bold',
+                        }}
+                      >
+                        Upcoming
+                      </span>
+                    )}
+                  </div>
                 </div>
+              )}
+              <div
+                style={{
+                  flex: '1 1 200px',
+                  border: '1px solid var(--outline-variant)',
+                  padding: '14px',
+                  backgroundColor: 'var(--surface-hover)',
+                }}
+              >
+                <SectionLabel>Director</SectionLabel>
+                <div style={{ fontSize: '17px' }}>{title.director}</div>
               </div>
-            )}
-            <div>
-              <SectionLabel>Director</SectionLabel>
-              <div style={{ fontSize: '17px' }}>{title.director}</div>
             </div>
+            <hr style={{ border: 'none', borderTop: '1px dashed var(--outline-variant)', margin: '4px 0' }} />
             <div>
               <SectionLabel>Cast</SectionLabel>
-              <div style={{ fontSize: '17px' }}>{title.cast.join(', ')}</div>
+              <CastGrid cast={title.cast} />
             </div>
+            <hr style={{ border: 'none', borderTop: '1px dashed var(--outline-variant)', margin: '4px 0' }} />
             <div>
               <SectionLabel>Plot</SectionLabel>
               <div

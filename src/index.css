@@ -45,7 +45,7 @@
 
 * {
   box-sizing: border-box;
-  border-radius: 0 !important;
+  border-radius: 2 !important;
   box-shadow: none !important;
   backdrop-filter: none !important;
 }
@@ -244,11 +244,11 @@ h6 {
 
 .ticket-card-status {
   position: absolute;
-  top: 12px;
-  right: 12px;
+  top: 4px;
+  right: 4px;
   z-index: 1;
   padding: 4px 8px;
-  font-size: 10px;
+  font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   background-color: rgba(16, 19, 26, 0.9);
@@ -2204,11 +2204,20 @@ h6 {
 
 @media (min-width: 768px) {
   .footer-inner {
-    flex-direction: row;
-    justify-content: space-between;
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
     align-items: center;
     text-align: left;
     gap: 0;
+  }
+
+  .footer-center {
+    text-align: center;
+  }
+
+  .footer-right {
+    text-align: right;
+    justify-self: end;
   }
 
   .footer-left {
@@ -2293,15 +2302,19 @@ h6 {
     order: 2;
   }
 
-  .profile-section-export {
+  .profile-section-appearance {
     order: 3;
   }
 
-  .profile-section-account {
+  .profile-section-export {
     order: 4;
   }
 
-  .profile-section-illustration {
+  .profile-section-account {
     order: 5;
+  }
+
+  .profile-section-illustration {
+    order: 6;
   }
 }

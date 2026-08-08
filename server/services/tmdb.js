@@ -179,7 +179,11 @@ async function getTMDBDetails(tmdbId, mediaType) {
     const details = await callTMDB(path, { append_to_response: 'credits' });
 
     const credits = details.credits || {};
-    const cast = (credits.cast || []).slice(0, 5).map((member) => member.name);
+    const cast = (credits.cast || []).slice(0, 8).map((member) => ({
+      name: member.name,
+      character: member.character || '',
+      profilePath: member.profile_path || null,
+    }));
 
     let director = 'N/A';
     if (cleanType === 'tv') {

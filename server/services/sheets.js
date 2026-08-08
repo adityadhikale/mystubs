@@ -38,6 +38,31 @@ const HEADERS = [
   'suggestedPlatform',
 ];
 
+function serializeCast(cast) {
+  if (!cast) return '';
+  if (Array.isArray(cast)) {
+    return JSON.stringify(cast);
+  }
+  return String(cast);
+}
+
+function parseCast(castRaw) {
+  if (!castRaw) return [];
+  try {
+    const parsed = JSON.parse(castRaw);
+    if (Array.isArray(parsed)) return parsed;
+    return [];
+  } catch (e) {
+    // Legacy format: plain comma-separated names from before this change
+    return castRaw.split(', ').filter(Boolean).map((name) => ({
+      name,
+      character: '',
+      profilePath: null,
+    }));
+  }
+}
+
+
 /**
  * Helper to fetch the metadata of the spreadsheet's first sheet tab.
  * Dynamically gets sheet name (title) and sheetId for deletion.
@@ -104,7 +129,6 @@ async function getAllTitles() {
     };
 
     const genreRaw = getVal('genre');
-    const castRaw = getVal('cast');
 
     return {
       id: getVal('id'),
@@ -117,7 +141,7 @@ async function getAllTitles() {
       imdbRating: getVal('imdbRating'),
       runtime: getVal('runtime'),
       director: getVal('director'),
-      cast: castRaw ? castRaw.split(', ') : [],
+      cast: parseCast(getVal('cast')),
       plot: getVal('plot'),
       status: getVal('status') || 'Watchlist',
       myRating: parseInt(getVal('myRating') || '0', 10),
@@ -188,6 +212,9 @@ async function addTitle(titleObject) {
   // Map values to row array according to column header layout
   const row = headers.map((h) => {
     const val = newTitle[h];
+    if (h === 'cast') {
+      return serializeCast(val);
+    }
     if (Array.isArray(val)) {
       return val.join(', ');
     }
@@ -270,7 +297,6 @@ async function updateTitle(id, updates) {
   });
 
   const genreRaw = rowObj.genre;
-  const castRaw = rowObj.cast;
 
   return {
     id: rowObj.id,
@@ -283,7 +309,7 @@ async function updateTitle(id, updates) {
     imdbRating: rowObj.imdbRating,
     runtime: rowObj.runtime,
     director: rowObj.director,
-    cast: castRaw ? castRaw.split(', ') : [],
+    cast: parseCast(rowObj.cast),
     plot: rowObj.plot,
     status: rowObj.status,
     myRating: parseInt(rowObj.myRating || '0', 10),
