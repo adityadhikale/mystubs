@@ -1,16 +1,17 @@
-// Title Detail screen: displays full metadata for a specific archive entry and allows modifying personal notes, rating, platform, status, or deleting the stub.
-import { useEffect, useState } from 'react';
+import React, { useEffect, useState, useRef } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import { getTitles, updateTitle, deleteTitle } from '../services/api';
 import Toast from '../components/Toast';
 import { formatReleaseDate, isUpcoming } from '../utils/dateUtils';
+import { formatDisplayDate } from '../utils/date';
+import { getPlatformIcon } from '../utils/platformIcons.jsx';
 
 const statusOptions = ['Watchlist', 'Watching', 'Completed'];
 const platformOptions = [
   'Netflix',
   'Prime Video',
   'Disney+ Hotstar',
-  'JioCinema',
+  'Crunchyroll',
   'Theater',
   'YouTube',
   'SonyLIV',
@@ -18,6 +19,115 @@ const platformOptions = [
   'Torrent/Downloaded',
   'Other',
 ];
+
+// Custom dropdown component for platform selection
+function PlatformDropdown({ value, onChange, disabled }) {
+  const [open, setOpen] = useState(false);
+  const rootRef = useRef(null);
+
+  useEffect(() => {
+    const handleDocumentClick = (event) => {
+      if (rootRef.current && !rootRef.current.contains(event.target)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener('mousedown', handleDocumentClick);
+    return () => document.removeEventListener('mousedown', handleDocumentClick);
+  }, []);
+
+  const handleToggle = () => {
+    if (!disabled) {
+      setOpen(!open);
+    }
+  };
+
+  const selectedOption = value;
+  const ActiveIcon = getPlatformIcon(selectedOption);
+
+  return (
+    <div ref={rootRef} className="archive-dropdown" style={{ width: '100%' }}>
+      <button
+        type="button"
+        className="archive-dropdown-trigger theme-control"
+        aria-haspopup="listbox"
+        aria-expanded={open}
+        onClick={handleToggle}
+        disabled={disabled}
+        style={{
+          width: '100%',
+          display: 'flex',
+          alignItems: 'center',
+          gap: '8px',
+          justifyContent: 'space-between',
+          cursor: disabled ? 'not-allowed' : 'pointer',
+        }}
+      >
+        <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+          {ActiveIcon ? (
+            <ActiveIcon size={16} style={{ flexShrink: 0 }} />
+          ) : null}
+          <span>{selectedOption || 'Select platform'}</span>
+        </span>
+        <span className="archive-dropdown-caret" aria-hidden="true" />
+      </button>
+
+      {open && (
+        <div
+          className="archive-dropdown-menu"
+          role="listbox"
+          style={{
+            width: '100%',
+            position: 'absolute',
+            zIndex: 100,
+            maxHeight: '250px',
+            overflowY: 'auto',
+          }}
+        >
+          <button
+            type="button"
+            className="archive-dropdown-option"
+            onClick={() => {
+              onChange('');
+              setOpen(false);
+            }}
+            role="option"
+            aria-selected={!value}
+          >
+            Select platform
+          </button>
+          {platformOptions.map((option) => {
+            const OptIcon = getPlatformIcon(option);
+            const active = option === value;
+            return (
+              <button
+                key={option}
+                type="button"
+                className={`archive-dropdown-option ${active ? 'is-active' : ''}`}
+                onClick={() => {
+                  onChange(option);
+                  setOpen(false);
+                }}
+                role="option"
+                aria-selected={active}
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                }}
+              >
+                {OptIcon ? (
+                  <OptIcon size={16} style={{ flexShrink: 0 }} />
+                ) : null}
+                <span>{option}</span>
+              </button>
+            );
+          })}
+        </div>
+      )}
+    </div>
+  );
+}
+
 
 // Small label header style helper for details sections
 function SectionLabel({ children }) {
@@ -634,7 +744,7 @@ export default function TitleDetail() {
                       gap: '10px',
                     }}
                   >
-                    <span>{formatReleaseDate(title.releaseDate)}</span>
+                    <span>{formatDisplayDate(title.releaseDate)}</span>
                     {isUpcoming(title.releaseDate) && (
                       <span
                         className="detail-chip"
@@ -768,26 +878,11 @@ export default function TitleDetail() {
 
             <div>
               <div className="detail-section-label">Platform / Watched On</div>
-              <select
+              <PlatformDropdown
                 value={watchedOnValue}
-                onChange={(event) =>
-                  updateField('watchedOn', event.target.value)
-                }
+                onChange={(value) => updateField('watchedOn', value)}
                 disabled={saving || !isCompleted}
-                className="theme-select"
-                style={{
-                  width: '100%',
-                  opacity: !isCompleted ? 0.45 : 1,
-                  cursor: !isCompleted ? 'not-allowed' : 'default',
-                }}
-              >
-                <option value="">Select platform</option>
-                {platformOptions.map((option) => (
-                  <option key={option} value={option}>
-                    {option}
-                  </option>
-                ))}
-              </select>
+              />
 
               {showOtherInput ? (
                 <input

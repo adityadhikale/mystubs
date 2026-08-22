@@ -10,6 +10,8 @@ import {
 import Toast from '../components/Toast';
 import TicketStubCard from '../components/TicketStubCard';
 import { formatReleaseDate, isUpcoming } from '../utils/dateUtils';
+import { formatDisplayDate } from '../utils/date';
+import { getPlatformIcon } from '../utils/platformIcons.jsx';
 
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/w185';
 
@@ -378,7 +380,7 @@ function DetailModal({ imdbID, existingSourceIds, onClose, onSuccess }) {
                     <div style={{ color: 'var(--text)' }}>
                       {!details.Released || details.Released === 'N/A'
                         ? 'N/A'
-                        : formatReleaseDate(details.Released)}
+                        : formatDisplayDate(details.Released)}
                     </div>
                   </div>
                   <div
@@ -407,8 +409,12 @@ function DetailModal({ imdbID, existingSourceIds, onClose, onSuccess }) {
                         <div className="detail-section-label">
                           Suggested Platform
                         </div>
-                        <div style={{ color: 'var(--text)' }}>
-                          {details.suggestedPlatform}
+                        <div style={{ color: 'var(--text)', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                          {(() => {
+                            const Icon = getPlatformIcon(details.suggestedPlatform);
+                            return Icon ? <Icon size={16} style={{ flexShrink: 0 }} /> : null;
+                          })()}
+                          <span>{details.suggestedPlatform}</span>
                         </div>
                       </div>
                     )}
