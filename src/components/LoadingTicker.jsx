@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-export default function LoadingTicker({ lines = [], interval = 4000 }) {
+export default function LoadingTicker({ lines = [], interval = 5000 }) {
   const [currentIndex, setCurrentIndex] = useState(() => {
     if (lines && lines.length > 0) {
       return Math.floor(Math.random() * lines.length);
@@ -36,7 +36,7 @@ export default function LoadingTicker({ lines = [], interval = 4000 }) {
       }
 
       setIsFading(true);
-      
+
       const fadeTimeout = setTimeout(() => {
         setCurrentIndex((prev) => {
           const length = currentLines.length;
