@@ -5,6 +5,8 @@ import { getTitles, deleteTitle, updateTitle } from '../services/api';
 import TicketStubCard from '../components/TicketStubCard';
 import Toast from '../components/Toast';
 import { getTodayDateString, exportToCsv } from '../utils/exportUtils';
+import LoadingTicker from '../components/LoadingTicker';
+import movieTrivia from '../data/movieTrivia';
 
 // A reusable search/filter dropdown menu that closes when clicking outside of it
 function CustomDropdown({
@@ -592,6 +594,7 @@ export default function Archive() {
             </svg>
           </div>
           <p className="state-message">Punching your archive stubs...</p>
+          <LoadingTicker lines={movieTrivia} />
         </div>
       </div>
     );

@@ -5,6 +5,8 @@ import Toast from '../components/Toast';
 import { formatReleaseDate, isUpcoming } from '../utils/dateUtils';
 import { formatDisplayDate } from '../utils/date';
 import { getPlatformIcon } from '../utils/platformIcons.jsx';
+import LoadingTicker from '../components/LoadingTicker';
+import movieTrivia from '../data/movieTrivia';
 
 const statusOptions = ['Watchlist', 'Watching', 'Completed'];
 const platformOptions = [
@@ -263,16 +265,9 @@ function StarPicker({ rating, onChange, disabled }) {
             type="button"
             onClick={() => onChange(value)}
             disabled={disabled}
+            className={`star-picker-btn ${active ? 'is-active' : 'is-inactive'}`}
             style={{
-              border: 'none',
-              background: 'transparent',
-              color: active
-                ? 'var(--accent-color)'
-                : 'rgba(242, 242, 242, 0.24)',
-              fontSize: '26px',
-              padding: 0,
               cursor: disabled ? 'not-allowed' : 'pointer',
-              lineHeight: 1,
             }}
             aria-label={`${value} star${value === 1 ? '' : 's'}`}
           >
@@ -553,33 +548,7 @@ export default function TitleDetail() {
           >
             Fetching your stub
           </p>
-          {/* Skeleton bars */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '10px',
-              width: '180px',
-              alignItems: 'center',
-            }}
-          >
-            <div
-              style={{
-                width: '100%',
-                height: '10px',
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--outline-variant)',
-              }}
-            />
-            <div
-              style={{
-                width: '60%',
-                height: '10px',
-                backgroundColor: 'var(--surface)',
-                border: '1px solid var(--outline-variant)',
-              }}
-            />
-          </div>
+          <LoadingTicker lines={movieTrivia} />
         </div>
       </div>
     );
@@ -778,13 +747,7 @@ export default function TitleDetail() {
             <hr style={{ border: 'none', borderTop: '1px dashed var(--outline-variant)', margin: '4px 0' }} />
             <div>
               <SectionLabel>Plot</SectionLabel>
-              <div
-                style={{
-                  lineHeight: 1.7,
-                  color: 'rgba(242, 242, 242, 0.8)',
-                  fontSize: '17px',
-                }}
-              >
+              <div className="detail-plot-text">
                 {title.plot}
               </div>
             </div>
