@@ -1,32 +1,75 @@
 export default [
   "Snow White and the Seven Dwarfs was the first full-length cel-animated feature film in history.",
+
   "Psycho was the first American film to show a flushing toilet on screen.",
   "The iconic green digital code in The Matrix was created from scanned sushi recipes.",
+
   "The Wilhelm Scream sound effect has been used in over four hundred movies and television shows.",
+
   "Steven Spielberg's Jaws was the first film to surpass one hundred million dollars at the box office.",
+
   "Only three movies in history have won all five major Academy Awards.",
   "The carpet pattern in The Shining is a reference to the Apollo 11 launchpad.",
   "The voice of Boo in Monsters Inc. was recorded while following the toddler around the studio.",
+
   "Orson Welles was only twenty-five years old when he directed and starred in Citizen Kane.",
+
   "The dinosaur sounds in Jurassic Park were created using recordings of mating tortoises.",
+
   "James Cameron wrote the screenplay for The Terminator while living in his car.",
+
   "A Clockwork Orange was the first mainstream studio film to use Dolby sound.",
   "The iconic face of Michael Myers in Halloween is actually a modified William Shatner mask.",
+
   "Toy Story was the first feature-length computer-animated movie ever released.",
   "Alfred Hitchcock never won a competitive Oscar for Best Director despite five nominations.",
+
   "Gone with the Wind remains the highest-grossing film of all time when adjusted for inflation.",
+
   "The PG-13 rating was created in 1984 following the release of Indiana Jones and the Temple of Doom.",
+
   "In Pulp Fiction, the contents of Marsellus Wallace's briefcase are never revealed.",
+
   "The Godfather Part II was the first sequel to win the Academy Award for Best Picture.",
+  
   "For the movie Alien, real animal organs were used to create the inside of the xenomorph eggs.",
+
   "The Lord of the Rings trilogy was filmed entirely in New Zealand over a period of several years.",
+
   "Mickey Mouse was originally named Mortimer before Walt Disney's wife suggested the name change.",
+
   "A single frame of the film Avatar took up to forty-eight hours to render.",
   "The Wizard of Oz used real asbestos to simulate falling snow in the poppy field scene.",
+
   "Charlie Chaplin once entered a Charlie Chaplin lookalike contest and came in third place.",
+
   "The mechanical shark used in Jaws frequently malfunctioned and sank to the ocean floor during filming.",
+
   "Beauty and the Beast was the first animated film to receive a Best Picture nomination.",
+
   "The voice actor of Mickey Mouse was married to the voice actor of Minnie Mouse in real life.",
+
   "In Star Wars, the sound of a lightsaber is a combination of projector hum and television static.",
-  "To prepare for his role in The Pianist, Adrien Brody sold his car and apartment to experience isolation."
+
+  "To prepare for his role in The Pianist, Adrien Brody sold his car and apartment to experience isolation.",
+
+  "The famous chest-burster scene in Alien was kept secret from most of the cast, resulting in genuine shocked reactions.",
+
+  "In The Dark Knight, Heath Ledger reportedly spent about a month developing the Joker's voice, mannerisms, and personality.",
+
+  "The sound of the T. rex roar in Jurassic Park was created using a combination of animal sounds, including a baby elephant and a tiger.",
+
+  "Rocky was filmed in just twenty-eight days, making it one of the fastest productions for a major Hollywood film.",
+
+  "The spinning hallway fight in Inception was filmed inside a rotating set that could rotate a full 360 degrees.",
+
+  "The iconic shower scene in Psycho contains dozens of rapid cuts and took seven days to film.",
+
+  "Tom Hanks was not originally the first choice to voice Woody in Toy Story, but he ultimately became closely associated with the character.",
+
+  "The DeLorean time machine in Back to the Future was originally envisioned as a refrigerator before the filmmakers changed the design.",
+
+  "The opening shot of The Godfather was filmed using a special lens that created a narrow depth of field around Marlon Brando's face.",
+
+  "The famous roar of MGM's lion was recorded separately from the film and became one of the most recognizable studio logos in cinema."
 ];
